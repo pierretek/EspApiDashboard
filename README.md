@@ -1,13 +1,13 @@
-# ESP Api Dashboard &nbsp; <img src="https://github.com/user-attachments/assets/97268fe2-313f-4554-be48-3f112f8b0747" width="40" height="40" align="top" />
+# ESP Api Dashboard &nbsp; <img src="https://github.com/user-attachments/assets/f0baf001-bbd4-4cb8-9915-fd82dad5cd95" width="40" height="40" align="top" />
 
-A configurable Api dashboard, where users can create, delete, and reorder up to five api endpoints on a TFT display
+A configurable ESP32 Api dashboard, where users can create, delete, and reorder up to five api endpoints on a TFT display
  
 ## Details 
 - Main program is in `src/main.cpp`, project libraries are in `lib/`, the system state and website files are in `include/`
 - This project uses a [128x160 ST7735 TFT Display](https://www.ebay.com/itm/191786659555?siteid=0&customid=&toolid=20012)
 - The ESP32 hosts a webserver where the user controls which API endpoints are displayed on a TFT display
 - Each API is given a dedicated FreeRTOS task to periodically update its data
-<!-- - Check out the [demo page!](https://pierretek.github.io/ESP32-LED-Webserver/) -->
+- Check out the [demo page!](https://pierretek.github.io/EspApiDashboard/)
 
 
 ## Requirements 
