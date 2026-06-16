@@ -1,0 +1,51 @@
+#pragma once
+
+//Website files for the webserver v2
+
+const char INDEX_HTML[] = R"====(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<title>ESP API Dashboard</title>
+<style>
+html{overflow-y:scroll}
+body{display:flex;flex-direction:column;min-height:100vh;justify-content:center;font-family:'Trebuchet MS';background:#46464b;color:#dcdcdc;font-size:20px}
+.page{display:flex;flex-direction:column;align-items:center}
+.content{border-radius:10px;background:rgb(40,43,48);box-shadow:0 8px 15px rgb(38,38,38);padding:30px;row-gap:20px;width:70%}
+.api-section{display:flex;flex-direction:row;align-items:stretch;border-radius:10px;outline:white solid 2px;background:rgb(29,31,35);margin:10px;position:relative;overflow:hidden}
+.drag-handle{display:flex;align-items:center;justify-content:center;width:32px;flex-shrink:0;cursor:grab;color:#aaa;font-size:20px;user-select:none;}
+.drag-handle:active{cursor:grabbing}
+.api-body{display:flex;flex-direction:column;gap:10px;padding:20px;padding-right:50px;flex:1;min-width:0}
+button.add-api{outline:2px solid #727272;display:block;width:100%;margin-top:10px;font-size:30px;color:#dcdcdc;background:transparent;border:none;border-radius:10px;padding:10px;cursor:pointer}
+button.delete{position:absolute;top:8px;right:8px;background:transparent;border:1.5px solid #b40303;border-radius:5px;font-size:14px;color:#b40303;padding:2px 6px;cursor:pointer;line-height:1}
+input,.color-field{border:1px solid #727272;border-radius:5px;padding:5px;background:#1d1f23;color:#dcdcdc;width:100%;box-sizing:border-box}
+input:focus{outline:none}
+input[type=color]{border:none;min-width:100px;width:auto}
+.api-title{height:5vh;font-size:20px}
+.color-field{display:flex;color:#848587;font-size:15px;align-items:center;column-gap:2vw;min-height:36px}
+.api-cooldown{-webkit-appearance:none;-moz-appearance:textfield;appearance:textfield}
+h1{align-self:center;text-shadow:0 5px 10px rgb(20,20,20);font-size:60px}
+.rw{position:relative;width:100%}
+.rw input{width:100%;box-sizing:border-box}
+.rw .ast{position:absolute;top:3px;left:4px;color:#b40303;font-weight:bold;font-size:12px;line-height:1;pointer-events:none}
+</style>
+</head>
+<body>
+<h1>ESP API Dashboard</h1>
+<div class="page"><div class="content" id="L"><button class="add-api" onclick="A()">Add Api (Max 5)</button></div></div>
+<script>
+var L=document.getElementById('L'),n=0;
+Sortable.create(L,{animation:300,handle:'.drag-handle',filter:'button.add-api',onEnd:()=>S()});
+L.addEventListener('change',e=>{if(e.target.matches('input'))S();if(e.target.classList.contains('dc'))e.target.closest('.api-section').style.outlineColor=e.target.value;});
+function A(){if(n>=5)return;const b=document.createElement('div');b.className='api-section';b.dataset.id=n++;b.innerHTML=`<div class="drag-handle">⠿</div><div class="api-body"><div class="rw"><span class="ast">*</span><input class="at" placeholder=" Title" maxlength="20"></div><div class="rw"><span class="ast">*</span><input class="al" placeholder=" API Link" maxlength="50"></div><div class="rw"><span class="ast">*</span><input class="ak" placeholder=" JSON Key" maxlength="50"></div><input class="as" placeholder=" Suffix" maxlength="20"><input class="ac" type="number" placeholder=" Refresh Cooldown (ms)" min="1000"><div class="color-field"><span>Display Color</span><input class="dc" type="color" value="#ffffff"></div></div><button class="delete" onclick="D(this)">✕</button>`;L.insertBefore(b,L.querySelector('button.add-api'));S();}
+function D(b){b.closest('.api-section').remove();S();}
+function R(){[...L.querySelectorAll('.api-section[data-id]')].forEach((b,i)=>b.dataset.id=i);n=L.querySelectorAll('.api-section[data-id]').length;}
+function S(){R();return fetch('/update',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify([...L.querySelectorAll('.api-section[data-id]')].map(b=>({id:+b.dataset.id,title:b.querySelector('.at').value,link:b.querySelector('.al').value,jsonKey:b.querySelector('.ak').value,suffix:b.querySelector('.as').value,cooldown:+b.querySelector('.ac').value||0,color:b.querySelector('.dc').value})).sort((a,b)=>a.id-b.id))});}
+</script>
+</body>
+</html>
+
+)====";
